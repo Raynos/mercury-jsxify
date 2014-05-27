@@ -32,6 +32,9 @@
     "plugin",
     "transform"
   ],
+  "scripts": {
+    "test": "mocha test/reactify"
+  },
   "author": {
     "name": "Andrey Popp",
     "email": "8mayday@gmail.com",

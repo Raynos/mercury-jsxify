@@ -20,7 +20,7 @@ describe('reactify', function() {
     bundle('./fixtures/main.js', function(err, result) {
       assert(!err);
       assert(result);
-      assertContains(result, 'React.DOM.h1(null, "Hello, world!")');
+      assertContains(result, 'h("h1", ["Hello, world!"])');
       done();
     });
   });
@@ -29,7 +29,7 @@ describe('reactify', function() {
     bundle('./fixtures/main.jsx', function(err, result) {
       assert(!err);
       assert(result);
-      assertContains(result, 'React.DOM.h1(null, "Hello, world!")');
+      assertContains(result, 'h("h1", ["Hello, world!"])');
       done();
     });
   });
@@ -38,16 +38,7 @@ describe('reactify', function() {
     bundle('./fixtures/simple.js', function(err, result) {
       assert(!err);
       assert(result);
-      assertContains(result, 'React.DOM.h1(null, "Hello, world!")');
-      done();
-    });
-  });
-
-  it('works for *.coffee', function(done) {
-    bundle('./fixtures/coffee.coffee', function(err, result) {
-      assert(!err);
-      assert(result);
-      assertContains(result, 'React.DOM.span( {class:"caret"})');
+      assertContains(result, 'h("h1", ["Hello, world!"])');
       done();
     });
   });
@@ -69,7 +60,7 @@ describe('reactify', function() {
         .bundle(function(err, result) {
           assert(!err);
           assert(result);
-          assertContains(result, 'React.DOM.h1(null, "Hello, world!")');
+          assertContains(result, 'h("h1", ["Hello, world!"])');
           done();
         });
     });
@@ -80,7 +71,7 @@ describe('reactify', function() {
         .bundle(function(err, result) {
           assert(!err);
           assert(result);
-          assertContains(result, 'React.DOM.h1(null, "Hello, world!")');
+          assertContains(result, 'h("h1", ["Hello, world!"])');
           done();
         });
     });
@@ -91,52 +82,11 @@ describe('reactify', function() {
         .bundle(function(err, result) {
           assert(!err);
           assert(result);
-          assertContains(result, 'React.DOM.h1(null, "Hello, world!")');
+          assertContains(result, 'h("h1", ["Hello, world!"])');
           done();
         });
     });
 
-  });
-
-  describe('transforming with es6 visitors', function() {
-
-    it('activates via es6 option', function(done) {
-      browserify('./fixtures/main.es6.jsx', {basedir: __dirname})
-        .transform({es6: true}, reactify)
-        .bundle(function(err, result) {
-          assert(!err);
-          assert(result);
-          assertContains(result, 'var func = function(x)  {return React.DOM.div(null, x)');
-          done();
-        });
-    });
-
-    it('activates via harmony option', function(done) {
-      browserify('./fixtures/main.es6.jsx', {basedir: __dirname})
-        .transform({harmony: true}, reactify)
-        .bundle(function(err, result) {
-          assert(!err);
-          assert(result);
-          assertContains(result, 'var func = function(x)  {return React.DOM.div(null, x)');
-          done();
-        });
-    });
-
-  });
-
-  describe('transforming with custom visitors', function() {
-
-    it('activates via es6 option', function(done) {
-      browserify('./fixtures/main.es6-custom.jsx', {basedir: __dirname})
-        .transform({visitors: 'es6-module-jstransform/visitors'}, reactify)
-        .bundle(function(err, result) {
-          assert(!err);
-          assert(result);
-          assertContains(result, 'var qs = require(\'querystring\');');
-          assertContains(result, 'return React.DOM.div(null);');
-          done();
-        });
-    });
   });
 
 });

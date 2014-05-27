@@ -1,9 +1,9 @@
 "use strict";
 
 var docblock        = require('jstransform/src/docblock');
-var transform       = require('jstransform').transform;
-var reactTransform  = require('mercury-jsx').transform;
-var visitors        = require('react-tools/vendor/fbtransform/visitors');
+// var transform       = require('jstransform').transform;
+var mercuryJSX  = require('mercury-jsx').transform;
+// var visitors        = require('react-tools/vendor/fbtransform/visitors');
 var through         = require('through');
 
 var isJSXExtensionRe = /^.+\.jsx$/;
@@ -13,7 +13,7 @@ function parsePragma(data) {
 }
 
 function process(file, isJSXFile, transformer) {
-  transformer = transformer || reactTransform;
+  transformer = transformer || mercuryJSX;
 
   var data = '';
   function write(chunk) {
@@ -26,12 +26,13 @@ function process(file, isJSXFile, transformer) {
 
     if (isJSXFile || isJSXPragma) {
       if (!isJSXPragma) {
-        data = '/** @jsx React.DOM */' + data;
+        data = '/** @jsx h */' + data;
       }
       try {
         var transformed = transformer(data);
         this.queue(transformed);
       } catch (error) {
+        console.log('error', error.stack);
         error.name = 'ReactifyError';
         error.message = file + ': ' + error.message;
         error.fileName = file;
@@ -71,19 +72,19 @@ module.exports = function(file, options) {
     isJSXFile = getExtensionsMatcher(extensions).exec(file);
   }
 
-  var transformVisitors = [].concat(
-    options.harmony || options.es6 ?
-      visitors.getAllVisitors() :
-      visitors.transformVisitors.react);
+  // var transformVisitors = [].concat(
+  //   options.harmony || options.es6 ?
+  //     visitors.getAllVisitors() :
+  //     visitors.transformVisitors.react);
 
-  if (options.visitors) {
-    [].concat(options.visitors).forEach(function(id) {
-      transformVisitors = require(id).visitorList.concat(transformVisitors);
-    });
-  }
+  // if (options.visitors) {
+  //   [].concat(options.visitors).forEach(function(id) {
+  //     transformVisitors = require(id).visitorList.concat(transformVisitors);
+  //   });
+  // }
 
   function transformer(source) {
-    return transform(transformVisitors, source).code;
+    return mercuryJSX(source)
   }
 
   return process(file, isJSXFile, transformer);
