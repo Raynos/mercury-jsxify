@@ -2,7 +2,7 @@
 
 var docblock        = require('jstransform/src/docblock');
 var transform       = require('jstransform').transform;
-var reactTransform  = require('react-tools').transform;
+var reactTransform  = require('mercury-jsx').transform;
 var visitors        = require('react-tools/vendor/fbtransform/visitors');
 var through         = require('through');
 

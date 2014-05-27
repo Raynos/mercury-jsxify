@@ -1,51 +1,49 @@
-# reactify
+# mercury-jsxify
 
 [Browserify][] transform for JSX (superset of JavaScript used in [React][]
 library):
 
     /**
-     * @jsx React.DOM
+     * @jsx h
      */
 
-    var React = require('react')
+    var h = require("mercury").h
 
-    var Hello = React.createClass({
+    function hello(name) {
+      return <div>Hello, {name}!</div>
+    }
 
-      render: function() {
-        return <div>Hello, {this.props.name}!</div>
-      }
-    })
-
-    React.renderComponent(
-      <Hello name="World" />,
-      document.getElementById('hello')
+    mercury.app(
+      document.getElementById('hello'),
+      mercury.value('world'),
+      hello
     )
 
 Save the snippet above as `main.js` and then produce a bundle with the following
 command:
 
-    % browserify -t reactify main.js
+    % browserify -t mercury-jsxify main.js
 
-`reactify` transform activates for files with either `.jsx` extension or `/**
+`mercury-jsxify` transform activates for files with either `.jsx` extension or `/**
 @jsx React.DOM */` pragma as a first line for any `.js` file.
 
-If you want to reactify modules with other extensions, pass an `-x /
+If you want to mercury-jsxify modules with other extensions, pass an `-x /
 --extension` option:
 
-    % browserify -t coffeeify -t [ reactify --extension coffee ] main.coffee
+    % browserify -t coffeeify -t [ mercury-jsxify --extension coffee ] main.coffee
 
 If you don't want to specify extension, just pass `--everything` option:
 
-    % browserify -t coffeeify -t [ reactify --everything ] main.coffee
+    % browserify -t coffeeify -t [ mercury-jsxify --everything ] main.coffee
 
 ## ES6 transformation
 
-`reactify` transform also can compile a limited set of es6 syntax constructs
+`mercury-jsxify` transform also can compile a limited set of es6 syntax constructs
 into es5. Supported features are arrow functions, rest params, templates, object
 short notation and classes. You can activate this via `--es6` or `--harmony`
 boolean option:
 
-    % browserify -t [ reactify --es6 ] main.js
+    % browserify -t [ mercury-jsxify --es6 ] main.js
 
 You can also configure it in package.json
 
@@ -54,7 +52,7 @@ You can also configure it in package.json
     "name": "my-package",
     "browserify": {
         "transform": [
-            ["reactify", {"es6": true}]
+            ["mercury-jsxify", {"es6": true}]
         ]
     }
 }
@@ -62,18 +60,18 @@ You can also configure it in package.json
 
 ## Using 3rd-party jstransform visitors
 
-Reactify uses [jstransform][] to transform JavaScript code. It allows code
+mercury-jsxify uses [jstransform][] to transform JavaScript code. It allows code
 transformations to be pluggable and, what's more important, composable. For
 example JSX and es6 are implemented as separate code transformations and still
 can be composed together.
 
-Reactify provides `--visitors` option to specify additional jstransform visitos
+mercury-jsxify provides `--visitors` option to specify additional jstransform visitos
 which could perform additional transformations.
 
 It should point to a module which exports `visitorList` attribute with a list of
 transformation functions to be applied:
 
-    % browserify -t [ reactify --visitors es6-module-jstransform/visitors ] main.js
+    % browserify -t [ mercury-jsxify --visitors es6-module-jstransform/visitors ] main.js
 
 Example above uses [es6-module-jstransform][] to compile es6 module syntax
 (`import` and `export` declarations) into CommonJS module constructs.
